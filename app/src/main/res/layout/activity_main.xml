@@ -21,7 +21,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnEmployee2"
+        android:id="@+id/btnDriver"
         android:layout_width="204dp"
         android:layout_height="76dp"
         android:text="Driver"
@@ -51,8 +51,12 @@
         android:scaleX="4"
         android:scaleY="4"
         android:text="NotUber"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="164dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.245" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
