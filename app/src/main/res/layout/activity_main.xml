@@ -4,15 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="137dp"
+        android:background="#673AB7"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnEmployee"
+        android:layout_width="120dp"
+        android:layout_height="48dp"
+        android:text="@string/employee"
+        tools:layout_editor_absoluteX="65dp"
+        tools:layout_editor_absoluteY="408dp" />
+
+    <Button
+        android:id="@+id/btnDriver"
+        android:layout_width="123dp"
+        android:layout_height="49dp"
+        android:text="@string/driver"
+        tools:layout_editor_absoluteX="217dp"
+        tools:layout_editor_absoluteY="409dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
