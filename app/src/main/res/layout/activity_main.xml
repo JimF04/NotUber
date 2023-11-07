@@ -71,10 +71,12 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/registerLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:alpha="0.70"
                 android:text="Are you new? Register here!"
-                android:alpha="0.70"/>
+                android:clickable="true"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -105,17 +107,8 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
+                android:layout_height="20dp"/>
 
-            <LinearLayout
-                android:id="@+id/btnEmployee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"/>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
 
         </LinearLayout>
 

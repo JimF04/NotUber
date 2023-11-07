@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DriverLoginActivity"
+    tools:context=".RegisterActivity"
     android:background="@drawable/background">
 
     <RelativeLayout
@@ -18,21 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="28dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/location_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go Map"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:textSize="32dp"
-            android:textColor="@color/white"/>
-    </LinearLayout>
+        android:padding="28dp"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -50,14 +36,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome, Driver"
+                android:text="Register"
                 android:textColor="@color/my_primary"
                 android:textSize="32dp"
                 android:textStyle="bold" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please Log in"
+                android:text="Register for free"
                 android:alpha="0.70"/>
 
             <View
@@ -67,12 +53,46 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Company ID"
+                android:alpha="0.70"
+                style="bold"/>
+
+            <EditText
+                android:id="@+id/register_companyID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:alpha="0.70"
+                style="bold"/>
+
+            <EditText
+                android:id="@+id/register_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Email"
                 android:alpha="0.70"
                 style="bold"/>
 
             <EditText
-                android:id="@+id/emailDriver"
+                android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/done_icon"
@@ -81,54 +101,66 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="password"
+                android:text="Password"
                 android:alpha="0.70"
                 style="bold"/>
 
             <EditText
-                android:id="@+id/passwordDriver"
+                android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/password_icon"
                 android:inputType="textPassword" />
 
-            <RelativeLayout
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Role"
+                android:alpha="0.70"
+                style="bold"/>
+
+            <RadioGroup
+                android:id="@+id/roleRadioGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <CheckBox
+                <RadioButton
+                    android:id="@+id/register_driver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Remenber me"
-                    android:layout_centerVertical="true"
-                    android:alpha="0.70"/>
+                    android:text="Driver"
+                    android:checked="true" />
 
-                <TextView
+                <RadioButton
+                    android:id="@+id/register_employee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I forgot my password"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    />
+                    android:text="Employee" />
+            </RadioGroup>
 
-            </RelativeLayout>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="10dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogInDriver"
+                android:id="@+id/btnRegisterUser"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Login"
+                android:text="Register"
                 android:textColor="@color/white"
                 app:cornerRadius="32dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnBackDriver"
+                android:id="@+id/btnBackRegister"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:text="Go Back"
@@ -142,7 +174,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="or login with"
+                android:text="or register with"
                 android:alpha="0.70"
                 android:layout_gravity="center"/>
 
