@@ -8,12 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.notuber.Model.Task;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
-
 public class DriverLoginActivity extends AppCompatActivity {
     private Button mBackDriver;
     private EditText D_Email, D_Password;

@@ -4,11 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.example.notuber.Model.User;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -54,7 +63,19 @@ public class RegisterActivity extends AppCompatActivity {
         if(!validadeCompanyID() || !validateName() || !validateEmail() || !validatePassword() || !validateRole()){
             return;
         }
-        Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+        User user = new User();
+        user.setCompanyID(mCompanyID.getText().toString());
+        user.setName(mName.getText().toString());
+        user.setEmail(mEmail.getText().toString());
+        user.setPassword(mPassword.getText().toString());
+        user.setLocation("A");
+        if(mDriver.isChecked()){
+            user.setRole("Driver");
+        } else {
+            user.setRole("Employee");
+        }
+
+        registerUserOnServer(user);
     }
     public boolean validadeCompanyID(){
         String companyIDInput = mCompanyID.getText().toString();
@@ -108,5 +129,35 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             return false;
         }
+    }
+
+    private void registerUserOnServer(User user) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.5.122:8080/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<Void> call = apiService.registerUser(user);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                String error = t.getMessage();
+                Log.e("Error", error);
+                System.out.println(error);
+            }
+        });
     }
 }
