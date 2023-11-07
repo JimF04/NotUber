@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NotUber</string>
+    <string name="employee">Employee</string>
+    <string name="driver">Driver</string>
 </resources>
