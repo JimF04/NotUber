@@ -70,9 +70,9 @@ public class RegisterActivity extends AppCompatActivity {
         user.setPassword(mPassword.getText().toString());
         user.setLocation("A");
         if(mDriver.isChecked()){
-            user.setRole("Driver");
+            user.setRole("driver");
         } else {
-            user.setRole("Employee");
+            user.setRole("employee");
         }
 
         registerUserOnServer(user);
