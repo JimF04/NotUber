@@ -29,7 +29,6 @@ public class EmployeeLoginActivity extends AppCompatActivity {
 
         mBackEmployee = (Button) findViewById(R.id.btnBackEmployee);
         mLogInEmployee = (Button) findViewById(R.id.btnLogInEmployee);
-
         E_Email = (EditText) findViewById(R.id.emailEmployee);
         E_Password = (EditText) findViewById(R.id.passwordEmployee);
 
@@ -61,7 +60,7 @@ public class EmployeeLoginActivity extends AppCompatActivity {
         LogIn logIn = new LogIn(email, password, role);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/api/")
+                .baseUrl("http://192.168.5.122:8080/loginemployee/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

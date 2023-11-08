@@ -1,7 +1,6 @@
 package com.example.notuber;
 
 import com.example.notuber.Model.LogIn;
-import com.example.notuber.Model.LogInDriver;
 import com.example.notuber.Model.User;
 
 import retrofit2.Call;
@@ -12,9 +11,9 @@ public interface ApiService {
     @POST("user/register")
     Call<Void> registerUser(@Body User user);
 
-    @POST("/user/conductor/login")
-    Call<Void> logInDriver(@Body LogInDriver logInDriver);
+    @POST("/user/driver")
+    Call<Void> logInDriver(@Body LogIn logIn);
 
-    @POST("user/employee/login")
+    @POST("user/employee")
     Call<Void> logInEmployee(@Body LogIn logIn);
 }

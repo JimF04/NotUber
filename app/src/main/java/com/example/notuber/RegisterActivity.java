@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.setName(mName.getText().toString());
         user.setEmail(mEmail.getText().toString());
         user.setPassword(mPassword.getText().toString());
-        user.setLocation("A");
+        user.setLocation("Location1");
         if(mDriver.isChecked()){
             user.setRole("driver");
         } else {

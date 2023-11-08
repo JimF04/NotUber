@@ -4,6 +4,9 @@ public class User {
     private String companyID;
     private String name;
     private String email;
+    private String password;
+    private String location;
+    private String role;
 
     public String getCompanyID() {
         return companyID;
@@ -52,9 +55,5 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-
-    private String password;
-    private String location;
-    private String role;
 
 }

@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.notuber.Model.LogIn;
-import com.example.notuber.Model.LogInDriver;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,16 +54,16 @@ public class DriverLoginActivity extends AppCompatActivity {
         String email = D_Email.getText().toString();
         String password = D_Password.getText().toString();
         String role = "driver";
-        LogInDriver logInDriver = new LogInDriver(email, password, role);
+        LogIn logIn = new LogIn(email, password, role);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/api/")
+                .baseUrl("http://192.168.5.122:8080/logindriver/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<Void> call = apiService.logInDriver(logInDriver);
+        Call<Void> call = apiService.logInDriver(logIn);
 
         call.enqueue(new Callback<Void>() {
             @Override
