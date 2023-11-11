@@ -140,8 +140,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerDriverOnServer(Driver driver) {
+        String ipAddress = VariablesGlobales.localip;
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/api/")
+                .baseUrl("http://" + ipAddress + ":8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -181,8 +183,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerEmployeeOnServer(Employee employee) {
+        String ipAddress = VariablesGlobales.localip;
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/api/")
+                .baseUrl("http://" + ipAddress + ":8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
