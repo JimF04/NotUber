@@ -3,12 +3,11 @@ package com.example.notuber.Model;
 public class LogIn {
     private String email;
     private String password;
-    private String role;
 
-    public LogIn(String email, String password, String role) {
+    public LogIn(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
+
     }
 
     public String getEmail() {
@@ -31,12 +30,5 @@ public class LogIn {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
 

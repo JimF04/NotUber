@@ -1,12 +1,13 @@
 package com.example.notuber.Model;
 
-public class User {
+public class Driver {
+
     private String companyID;
     private String name;
     private String email;
     private String password;
-    private String location;
-    private String role;
+    private double rating;
+    private int rides;
 
     public String getCompanyID() {
         return companyID;
@@ -40,20 +41,17 @@ public class User {
         this.password = password;
     }
 
-    public String getLocation() {
-        return location;
+    public double getRating() {
+        return rating;
     }
-
-    public void setLocation(String location) {
-        this.location = location;
+    public void setRating(double rating) {
+        this.rating = rating;
     }
-
-    public String getRole() {
-        return role;
+    public int getRides() {
+        return rides;
     }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setRides(int rides) {
+        this.rides = rides;
     }
 
 }

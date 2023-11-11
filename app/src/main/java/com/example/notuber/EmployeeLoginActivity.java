@@ -56,11 +56,10 @@ public class EmployeeLoginActivity extends AppCompatActivity {
         }
         String email = E_Email.getText().toString();
         String password = E_Password.getText().toString();
-        String role = "employee";
-        LogIn logIn = new LogIn(email, password, role);
+        LogIn logIn = new LogIn(email, password);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/loginemployee/")
+                .baseUrl("http://192.168.5.122:8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

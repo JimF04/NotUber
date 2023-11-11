@@ -11,7 +11,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.notuber.Model.User;
+import com.example.notuber.Model.Driver;
+import com.example.notuber.Model.Employee;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -63,19 +64,26 @@ public class RegisterActivity extends AppCompatActivity {
         if(!validadeCompanyID() || !validateName() || !validateEmail() || !validatePassword() || !validateRole()){
             return;
         }
-        User user = new User();
-        user.setCompanyID(mCompanyID.getText().toString());
-        user.setName(mName.getText().toString());
-        user.setEmail(mEmail.getText().toString());
-        user.setPassword(mPassword.getText().toString());
-        user.setLocation("Location1");
-        if(mDriver.isChecked()){
-            user.setRole("driver");
-        } else {
-            user.setRole("employee");
-        }
+        if (mDriver.isChecked()){
+            Driver driver = new Driver();
+            driver.setCompanyID(mCompanyID.getText().toString());
+            driver.setName(mName.getText().toString());
+            driver.setEmail(mEmail.getText().toString());
+            driver.setPassword(mPassword.getText().toString());
+            driver.setRating(0.0);
+            driver.setRides(0);
+            registerDriverOnServer(driver);
 
-        registerUserOnServer(user);
+        } else {
+            Employee employee = new Employee();
+            employee.setCompanyID(mCompanyID.getText().toString());
+            employee.setName(mName.getText().toString());
+            employee.setEmail(mEmail.getText().toString());
+            employee.setPassword(mPassword.getText().toString());
+            employee.setLocation("Location1");
+            registerEmployeeOnServer(employee);
+
+        }
     }
     public boolean validadeCompanyID(){
         String companyIDInput = mCompanyID.getText().toString();
@@ -131,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void registerUserOnServer(User user) {
+    private void registerDriverOnServer(Driver driver) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.5.122:8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -139,7 +147,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<Void> call = apiService.registerUser(user);
+
+        Call<Void> call = apiService.registerDriver(driver);
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -159,5 +168,38 @@ public class RegisterActivity extends AppCompatActivity {
                 System.out.println(error);
             }
         });
+
+    }
+
+    private void registerEmployeeOnServer(Employee employee) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.5.122:8080/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+
+        Call<Void> call = apiService.registerEmployee(employee);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(RegisterActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                String error = t.getMessage();
+                Log.e("Error", error);
+                System.out.println(error);
+            }
+        });
+
     }
 }

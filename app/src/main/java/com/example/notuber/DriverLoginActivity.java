@@ -53,11 +53,10 @@ public class DriverLoginActivity extends AppCompatActivity {
         }
         String email = D_Email.getText().toString();
         String password = D_Password.getText().toString();
-        String role = "driver";
-        LogIn logIn = new LogIn(email, password, role);
+        LogIn logIn = new LogIn(email, password);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.5.122:8080/logindriver/")
+                .baseUrl("http://192.168.5.122:8080/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
