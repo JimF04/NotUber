@@ -7,6 +7,7 @@ public class Employee {
     private String email;
     private String password;
     private String location;
+    private double rating;
 
     public String getCompanyID() {
         return companyID;
@@ -46,5 +47,12 @@ public class Employee {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

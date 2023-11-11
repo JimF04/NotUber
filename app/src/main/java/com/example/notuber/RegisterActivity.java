@@ -81,8 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
             employee.setEmail(mEmail.getText().toString());
             employee.setPassword(mPassword.getText().toString());
             employee.setLocation("Location1");
+            employee.setRating(0.0);
             registerEmployeeOnServer(employee);
-
         }
     }
     public boolean validadeCompanyID(){
@@ -155,8 +155,17 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    if (response.code() == 400) {
+                        Toast.makeText(RegisterActivity.this, "User with the same email or CompanyID already exists", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -183,14 +192,23 @@ public class RegisterActivity extends AppCompatActivity {
         Call<Void> call = apiService.registerEmployee(employee);
 
         call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return;
+                    } else {
+                        if (response.code() == 400) {
+                            Toast.makeText(RegisterActivity.this, "User with the same email or CompanyID already exists", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
-            }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
