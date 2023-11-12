@@ -76,6 +76,10 @@ public class EmployeeLoginActivity extends AppCompatActivity {
                     // Inicio de sesión exitoso, realiza las acciones necesarias.
                     Toast.makeText(EmployeeLoginActivity.this, "Employee logged in successfully", Toast.LENGTH_SHORT).show();
 
+                    Intent intent = new Intent(EmployeeLoginActivity.this, EmployeeActivity.class);
+                    startActivity(intent);
+                    finish();
+
                 } else {
                     if (response.code() == 401) {
                         if (response.message().equals("User not found")) {
