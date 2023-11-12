@@ -75,14 +75,19 @@ public class RegisterActivity extends AppCompatActivity {
             registerDriverOnServer(driver);
 
         } else {
-            Employee employee = new Employee();
-            employee.setCompanyID(mCompanyID.getText().toString());
-            employee.setName(mName.getText().toString());
-            employee.setEmail(mEmail.getText().toString());
-            employee.setPassword(mPassword.getText().toString());
-            employee.setLocation("Location1");
-            employee.setRating(0.0);
-            registerEmployeeOnServer(employee);
+
+            Intent intent = new Intent(RegisterActivity.this, ChooseLocationActivity.class);
+            startActivity(intent);
+            finish();
+
+            //Employee employee = new Employee();
+            //employee.setCompanyID(mCompanyID.getText().toString());
+            //employee.setName(mName.getText().toString());
+            //employee.setEmail(mEmail.getText().toString());
+            //employee.setPassword(mPassword.getText().toString());
+            //employee.setLocation("Location1");
+            //employee.setRating(0.0);
+            //registerEmployeeOnServer(employee);
         }
     }
     public boolean validadeCompanyID(){

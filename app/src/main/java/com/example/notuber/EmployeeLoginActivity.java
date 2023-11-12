@@ -75,7 +75,7 @@ public class EmployeeLoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // Inicio de sesión exitoso, realiza las acciones necesarias.
                     Toast.makeText(EmployeeLoginActivity.this, "Employee logged in successfully", Toast.LENGTH_SHORT).show();
-                    // Puedes redirigir a la actividad principal del conductor aquí.
+
                 } else {
                     if (response.code() == 401) {
                         if (response.message().equals("User not found")) {
