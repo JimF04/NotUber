@@ -75,19 +75,18 @@ public class RegisterActivity extends AppCompatActivity {
             registerDriverOnServer(driver);
 
         } else {
+            Bundle bundle = new Bundle();
+            bundle.putString("companyID", mCompanyID.getText().toString());
+            bundle.putString("name", mName.getText().toString());
+            bundle.putString("email", mEmail.getText().toString());
+            bundle.putString("password", mPassword.getText().toString());
+            bundle.putString("role", "employee");
+
 
             Intent intent = new Intent(RegisterActivity.this, ChooseLocationActivity.class);
+            intent.putExtras(bundle);
             startActivity(intent);
             finish();
-
-            //Employee employee = new Employee();
-            //employee.setCompanyID(mCompanyID.getText().toString());
-            //employee.setName(mName.getText().toString());
-            //employee.setEmail(mEmail.getText().toString());
-            //employee.setPassword(mPassword.getText().toString());
-            //employee.setLocation("Location1");
-            //employee.setRating(0.0);
-            //registerEmployeeOnServer(employee);
         }
     }
     public boolean validadeCompanyID(){
@@ -175,48 +174,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                String error = t.getMessage();
-                Log.e("Error", error);
-                System.out.println(error);
-            }
-        });
-
-    }
-
-    private void registerEmployeeOnServer(Employee employee) {
-        String ipAddress = VariablesGlobales.localip;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + ipAddress + ":8080/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
-
-
-        Call<Void> call = apiService.registerEmployee(employee);
-
-        call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(RegisterActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return;
-                    } else {
-                        if (response.code() == 400) {
-                            Toast.makeText(RegisterActivity.this, "User with the same email or CompanyID already exists", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
