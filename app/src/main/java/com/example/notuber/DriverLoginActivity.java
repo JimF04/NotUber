@@ -73,7 +73,11 @@ public class DriverLoginActivity extends AppCompatActivity {
                     // Inicio de sesión exitoso, realiza las acciones necesarias.
                     Toast.makeText(DriverLoginActivity.this, "Driver logged in successfully", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(DriverLoginActivity.this, DriverActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("role", "driver");
+
+                    Intent intent = new Intent(DriverLoginActivity.this, ChooseLocationActivity.class);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
 

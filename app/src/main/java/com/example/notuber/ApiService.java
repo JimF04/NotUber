@@ -1,5 +1,6 @@
 package com.example.notuber;
 
+import com.example.notuber.Model.ApiResponse;
 import com.example.notuber.Model.Employee;
 import com.example.notuber.Model.LogIn;
 import com.example.notuber.Model.Driver;
@@ -12,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiService {
 
@@ -29,4 +31,9 @@ public interface ApiService {
 
     @GET("graph")
     Call<NodesResponse> getNodes();
+
+    @GET("employee/location/{email}")
+    Call<ApiResponse> getEmployeeLocation(@Path("email") String email);
+
+
 }

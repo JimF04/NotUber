@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.notuber.Model.Driver;
 import com.example.notuber.Model.Employee;
 import com.example.notuber.Model.NodeMarker;
 import com.example.notuber.Model.NodesResponse;
@@ -109,7 +110,15 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                             employee.setRating(0.0);
 
                             registerEmployeeOnServer(employee);
-                        } else {
+                        } else if (Objects.equals(role, "driver")) {
+                            Bundle bundle2 = new Bundle();
+                            bundle2.putString("driverLocation", nodeName);
+
+                            Intent intent2 = new Intent(ChooseLocationActivity.this, DriverActivity.class);
+                            intent2.putExtras(bundle2);
+                            startActivity(intent2);
+                            finish();
+                            return true;
 
                         }
                     }

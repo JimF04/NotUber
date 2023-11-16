@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,8 +24,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +44,12 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
     private MapView mapView;
 
+    private List<Marker> markers = new ArrayList<>();
+    private List<LatLng> journeyPath = new ArrayList<>();
+
+    private Button mStart;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MapViewModel_Driver homeViewModel =
@@ -52,6 +62,15 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
 
         mapView.getMapAsync(this);
+
+        mStart = (Button) root.findViewById(R.id.btnStart);
+//        mStart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startJourney();
+//            }
+//        });
+
 
         return root;
     }
@@ -101,6 +120,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
                     // Agregar marcadores al mapa
                     addMarkersToMap(response.body().getNodes());
+
+                    Bundle bundle = getArguments();
+                    String driverLocation = bundle.getString("driverLocation", "default_value");
+                    setDriverLocationMarker(driverLocation);
+
                 }
             }
 
@@ -129,7 +153,29 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
 
-            mMap.addMarker(markerOptions);
+            Marker marker = mMap.addMarker(markerOptions);
+            markers.add(marker);
+        }
+    }
+
+    private void setDriverLocationMarker(String driverLocation) {
+        for (Marker marker : markers) {
+            if (driverLocation.equals(marker.getTitle())) {
+                // Crear un nuevo marcador en la misma posición
+                MarkerOptions newMarkerOptions = new MarkerOptions()
+                        .position(marker.getPosition())
+                        .title(marker.getTitle())
+                        .zIndex(1.0f)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon));
+
+                // Agregar el nuevo marcador al mapa
+                Marker newMarker = mMap.addMarker(newMarkerOptions);
+
+                // Añadir el nuevo marcador a la lista de marcadores
+                markers.add(newMarker);
+
+                break; // Termina el bucle después de encontrar el marcador original
+            }
         }
     }
 }

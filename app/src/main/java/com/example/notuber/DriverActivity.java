@@ -5,12 +5,16 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.notuber.databinding.ActivityDriverBinding;
+import com.example.notuber.ui.Driver.map.MapFragment_Driver;
+import com.example.notuber.ui.Employee.map.MapFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,6 +39,21 @@ public class DriverActivity extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
+
+        // Obtener el Bundle del Intent
+        Bundle bundle = getIntent().getExtras();
+
+        // Obtener el NavHostFragment
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_driver);
+
+        // Obtener el fragmento actual
+        Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+
+        // Establecer los argumentos en el fragmento actual
+        if (currentFragment instanceof MapFragment_Driver) {
+            currentFragment.setArguments(bundle);
+        }
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each

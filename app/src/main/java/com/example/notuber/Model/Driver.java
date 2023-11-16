@@ -8,6 +8,7 @@ public class Driver {
     private String password;
     private double rating;
     private int rides;
+    private String location;
 
     public String getCompanyID() {
         return companyID;
