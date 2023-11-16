@@ -6,11 +6,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.notuber.ui.Employee.map.MapFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -39,6 +42,21 @@ public class EmployeeActivity extends AppCompatActivity{
                         .setAction("Action", null).show();
             }
         });
+
+        // Obtener el Bundle del Intent
+        Bundle bundle = getIntent().getExtras();
+
+        // Obtener el NavHostFragment
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_employee);
+
+        // Obtener el fragmento actual
+        Fragment currentFragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
+
+        // Establecer los argumentos en el fragmento actual
+        if (currentFragment instanceof MapFragment) {
+            currentFragment.setArguments(bundle);
+        }
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -50,6 +68,7 @@ public class EmployeeActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_employee);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
     }
 
     @Override

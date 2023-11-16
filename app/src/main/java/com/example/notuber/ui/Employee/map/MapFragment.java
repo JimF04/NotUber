@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notuber.ApiService;
+import com.example.notuber.Model.ApiResponse;
 import com.example.notuber.Model.NodeMarker;
 import com.example.notuber.Model.NodesResponse;
 import com.example.notuber.R;
@@ -24,8 +25,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +45,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     private MapView mapView;
+    private List<Marker> markers = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -100,6 +106,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     // Agregar marcadores al mapa
                     addMarkersToMap(response.body().getNodes());
+
+                    Bundle bundle = getArguments();
+                    // Acceder a los datos del Bundle según sea necesario
+                    String email = bundle.getString("email", "default_value");
+                    // Realizar acciones con el email si es necesario
+                    Log.d("MapFragment", "Email received: " + email);
+
+                    // Llamar al servidor para obtener la ubicación del empleado
+                    getEmployeeLocation(email);
                 }
             }
 
@@ -128,7 +143,61 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             }
 
-            mMap.addMarker(markerOptions);
+            Marker marker = mMap.addMarker(markerOptions);
+            markers.add(marker);
         }
+    }
+
+    private void getEmployeeLocation(String email) {
+        Log.d("Node", "getEmployeeLocation called with email: " + email);
+
+        String ipAddress = VariablesGlobales.localip;
+
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + ipAddress + ":8080/api/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        // Llamar al nuevo endpoint para obtener la ubicación
+        // Llamar al nuevo endpoint para obtener la ubicación
+        Call<ApiResponse> call = apiService.getEmployeeLocation(email);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse apiResponse = response.body();
+                    String location = apiResponse.getLocation();
+                    // Buscar el marcador con el mismo nombre de ubicación
+                    Marker employeeMarker = findMarkerByLocationName(location);
+
+                    if (employeeMarker != null) {
+                        // Cambiar el color del marcador
+                        employeeMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    } else {
+                        Log.e("MapFragment", "Marker not found for location: " + location);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                // Manejar el fallo
+                Log.e("Node", "Error al obtener la ubicación desde la API", t);
+            }
+        });
+    }
+
+    private Marker findMarkerByLocationName(String locationName) {
+        for (Marker marker : markers) {
+            if (locationName.equals(marker.getTitle())) {
+                // Cambiar el color del marcador aquí
+                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                return marker;
+            }
+        }
+        return null;
     }
 }
