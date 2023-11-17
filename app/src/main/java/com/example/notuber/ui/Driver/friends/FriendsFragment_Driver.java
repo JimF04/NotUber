@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import androidx.lifecycle.Observer;
 import com.example.notuber.ApiService;
 import com.example.notuber.DriverActivity;
 import com.example.notuber.DriverLoginActivity;
@@ -100,17 +101,23 @@ public class FriendsFragment_Driver extends Fragment {
                 }
             });
 
-            String friendstring = viewmodel.getFriends().toString();
-            String[] amigos = friendstring.split("\\s*,\\s*");
+            viewmodel.getFriends().observe(getViewLifecycleOwner(), new Observer<String>() {
+                @Override
+                public void onChanged(String friendstring) {
+                    // This code will run whenever the friends list in the ViewModel is updated
+                    if (friendstring != null && !friendstring.isEmpty()) {
+                        String[] amigos = friendstring.split("\\s*,\\s*");
+                        linearLayout.removeAllViews(); // Clear existing views
 
-            linearLayout.removeAllViews(); // Clear existing views
-
-            for (String amigo : amigos) {
-                TextView textView = new TextView(getContext());
-                textView.setText(amigo);
-                textView.setPadding(10, 10, 10, 10);
-                linearLayout.addView(textView);
-            }
+                        for (String amigo : amigos) {
+                            TextView textView = new TextView(getContext());
+                            textView.setText(amigo);
+                            textView.setPadding(10, 10, 10, 10);
+                            linearLayout.addView(textView);
+                        }
+                    }
+                }
+            });
         });
 
         return root;

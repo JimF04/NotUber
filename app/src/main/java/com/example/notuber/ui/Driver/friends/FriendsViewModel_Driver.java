@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 public class FriendsViewModel_Driver extends ViewModel {
 
     private final MutableLiveData<String> mText;
-    private final MutableLiveData<String> friends = new MutableLiveData<>();
+    private final MutableLiveData<String> friends = new MutableLiveData<String>();
 
     public FriendsViewModel_Driver() {
         mText = new MutableLiveData<>();
