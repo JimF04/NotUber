@@ -1,5 +1,6 @@
 package com.example.notuber.ui.Driver.map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,10 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notuber.ApiService;
+import com.example.notuber.DriverLoginActivity;
+import com.example.notuber.MainActivity;
 import com.example.notuber.Model.Node;
 import com.example.notuber.Model.NodeMarker;
 import com.example.notuber.Model.NodesResponse;
 import com.example.notuber.R;
+import com.example.notuber.RatingActivity;
 import com.example.notuber.VariablesGlobales;
 import com.example.notuber.databinding.FragmentMapBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -348,15 +352,15 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private void animateCarAlongPath(List<LatLng> path, double totalDistance) {
+    private void animateCarAlongPath(final List<LatLng> path, double totalDistance) {
         // Reset previous animation
         handler.removeCallbacksAndMessages(null);
 
-        int DistanciaInt = (int) Math.round(totalDistance);
+        int distanciaInt = (int) Math.round(totalDistance);
 
-        Log.e("Time", String.valueOf(DistanciaInt));
+        Log.e("Time", String.valueOf(distanciaInt));
         // Calculate the total time for the animation (adjust speedFactor as needed)
-        int totalAnimationTime = (DistanciaInt*10000)/ path.size(); // 1000 milliseconds per second
+        int totalAnimationTime = (distanciaInt * 10000) / path.size(); // 1000 milliseconds per second
 
         Log.e("Time", String.valueOf(totalAnimationTime));
         // Index to keep track of the current position in the path
@@ -372,6 +376,13 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                 if (currentIndex[0] < path.size()) {
                     LatLng nextPosition = path.get(currentIndex[0]);
                     moveCarMarker(nextPosition);
+
+                    // Check if it's the last position in the path
+                    if (currentIndex[0] == path.size() - 1) {
+                        // Perform the additional action for the last position
+                        performAdditionalAction();
+                    }
+
                     currentIndex[0]++;
                     // Repeat the animation after a delay
                     handler.postDelayed(this, delay);
@@ -388,11 +399,17 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         for (Marker marker : markers) {
             if (marker.getTitle().equals("CarMarker")) {
                 marker.setPosition(newPosition);
-
                 break;
             }
         }
     }
+
+    private void performAdditionalAction() {
+        Intent intent = new Intent(getActivity(), RatingActivity.class);
+        startActivity(intent);
+        Log.e("Animation", "Reached the last position. Performing additional action.");
+    }
+
 
     private void getTimepProm(List<String> destinationNames, List<LatLng> coordinates) {
         String ipAddress = VariablesGlobales.localip;
