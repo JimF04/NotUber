@@ -1,6 +1,7 @@
 package com.example.notuber;
 
 import com.example.notuber.Model.*;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -84,5 +85,9 @@ public interface ApiService {
      */
     @GET("employee/location/{email}")
     Call<ApiResponse> getEmployeeLocation(@Path("email") String email);
+
+    @POST("shortestPathToCompany")
+    Call<List<Node>> getShortestPathToCompany(@Body List<String> destinationNames);
+
 
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notuber.ApiService;
+import com.example.notuber.Model.Node;
 import com.example.notuber.Model.NodeMarker;
 import com.example.notuber.Model.NodesResponse;
 import com.example.notuber.R;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,18 +154,25 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     String driverLocation = bundle.getString("driverLocation", "default_value");
                     setDriverLocationMarker(driverLocation);
 
-                    ArrayList lista_nodos = new ArrayList();
+                    // Create a list of destinations
+                    List<String> destinations = new ArrayList<>();
+                    destinations.add(driverLocation);
+                    destinations.add("Destino 1");
 
-                    LatLng origen = new LatLng(9.838267, -83.902797);
-                    LatLng destino = new LatLng(9.846535, -83.903945);
-                    LatLng otro = new LatLng(9.854979,  -83.90887);
+                    getShortestPath(destinations);
 
-
-                    lista_nodos.add(origen);
-                    lista_nodos.add(destino);
-                    lista_nodos.add(otro);
-
-                    drawLinesBetweenCoordinates(lista_nodos);
+//                    ArrayList lista_nodos = new ArrayList();
+//
+//                    LatLng origen = new LatLng(9.838267, -83.902797);
+//                    LatLng destino = new LatLng(9.846535, -83.903945);
+//                    LatLng otro = new LatLng(9.854979,  -83.90887);
+//
+//
+//                    lista_nodos.add(origen);
+//                    lista_nodos.add(destino);
+//                    lista_nodos.add(otro);
+//
+//                    drawLinesBetweenCoordinates(lista_nodos);
 
                 }
             }
@@ -265,7 +274,51 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     }
 
 
+    private void getShortestPath(List<String> destinationNames) {
+        String ipAddress = VariablesGlobales.localip;
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + ipAddress + ":8080/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
 
+        // Use the new method to get the shortest path
+        Call<List<Node>> call = apiService.getShortestPathToCompany(destinationNames);
+        call.enqueue(new Callback<List<Node>>() {
+            @Override
+            public void onResponse(Call<List<Node>> call, Response<List<Node>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Node> shortestPath = response.body();
+
+                    // Log the result
+                    for (Node node : shortestPath) {
+                        Log.d("Shortest Path Node", "Name: " + node.getName() +
+                                ", Latitude: " + node.getLatitude() +
+                                ", Longitude: " + node.getLongitude());
+                    }
+
+                    // Create a list of coordinates from the shortest path
+                    List<LatLng> coordinates = new ArrayList<>();
+                    for (Node node : shortestPath) {
+                        coordinates.add(new LatLng(node.getLatitude(), node.getLongitude()));
+                    }
+
+                    // Draw the lines between the coordinates
+                    drawLinesBetweenCoordinates(coordinates);
+
+                } else {
+                    // Handle error
+                    Log.e("API Error", "Error getting shortest path");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Node>> call, Throwable t) {
+                // Handle failure
+                Log.e("API Error", "Failed to get shortest path", t);
+            }
+        });
+    }
 
 }
