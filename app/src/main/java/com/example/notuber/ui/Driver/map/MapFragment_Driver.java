@@ -1,6 +1,8 @@
 package com.example.notuber.ui.Driver.map;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notuber.ApiService;
+import com.example.notuber.DriverLoginActivity;
+import com.example.notuber.MainActivity;
 import com.example.notuber.Model.Node;
 import com.example.notuber.Model.NodeMarker;
 import com.example.notuber.Model.NodesResponse;
 import com.example.notuber.R;
+import com.example.notuber.RatingActivity;
 import com.example.notuber.VariablesGlobales;
 import com.example.notuber.databinding.FragmentMapBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,6 +60,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
     private Button mStart;
     private Polyline journeyPolyline;
+
+    private Handler handler = new Handler();
+
+    private Marker carMarker;
+
 
 
 
@@ -218,22 +228,33 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
      * @param driverLocation La ubicación actual del conductor.
      */
     private void setDriverLocationMarker(String driverLocation) {
-        for (Marker marker : markers) {
-            if (driverLocation.equals(marker.getTitle())) {
-                // Crear un nuevo marcador en la misma posición
-                MarkerOptions newMarkerOptions = new MarkerOptions()
-                        .position(marker.getPosition())
-                        .title(marker.getTitle())
-                        .zIndex(1.0f)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon));
+        if (carMarker != null) {
+            // Update the position of the existing car marker
+            for (Marker marker : markers) {
+                if ("CarMarker".equals(marker.getTitle())) {
+                    marker.setPosition(marker.getPosition());
+                    break;
+                }
+            }
+        } else {
+            // Create a new car marker if it doesn't exist
+            for (Marker marker : markers) {
+                if (driverLocation.equals(marker.getTitle())) {
+                    // Create a new car marker in the same position
+                    MarkerOptions newMarkerOptions = new MarkerOptions()
+                            .position(marker.getPosition())
+                            .title("CarMarker")
+                            .zIndex(1.0f)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon));
 
-                // Agregar el nuevo marcador al mapa
-                Marker newMarker = mMap.addMarker(newMarkerOptions);
+                    // Add the new car marker to the map
+                    carMarker = mMap.addMarker(newMarkerOptions);
 
-                // Añadir el nuevo marcador a la lista de marcadores
-                markers.add(newMarker);
+                    // Add the new car marker to the list of markers
+                    markers.add(carMarker);
 
-                break; // Termina el bucle después de encontrar el marcador original
+                    break; // End the loop after finding the original marker
+                }
             }
         }
     }
@@ -264,8 +285,9 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         // Añade un marcador con el ícono solo en la última posición
         if (!coordinates.isEmpty()) {
             LatLng lastPosition = coordinates.get(coordinates.size() - 1);
+            LatLng position = new LatLng(9.858343, -83.915458);
             MarkerOptions markerOptions = new MarkerOptions()
-                    .position(lastPosition)
+                    .position(position)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.hombre_icon))
                     .anchor(0.5f, 0.5f); // Ajusta la posición del ancla del icono
 
@@ -307,6 +329,14 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     // Draw the lines between the coordinates
                     drawLinesBetweenCoordinates(coordinates);
 
+                    List<String> coordinates2 = new ArrayList<>();
+                    for (Node node : shortestPath) {
+                        coordinates2.add(node.getName());
+                    }
+
+                    // Pass the coordinates and total distance to animateCarAlongPath
+                    getTimepProm(coordinates2, coordinates);
+
                 } else {
                     // Handle error
                     Log.e("API Error", "Error getting shortest path");
@@ -320,5 +350,103 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
+
+    private void animateCarAlongPath(final List<LatLng> path, double totalDistance) {
+        // Reset previous animation
+        handler.removeCallbacksAndMessages(null);
+
+        int distanciaInt = (int) Math.round(totalDistance);
+
+        Log.e("Time", String.valueOf(distanciaInt));
+        // Calculate the total time for the animation (adjust speedFactor as needed)
+        int totalAnimationTime = (distanciaInt * 10000) / path.size(); // 1000 milliseconds per second
+
+        Log.e("Time", String.valueOf(totalAnimationTime));
+        // Index to keep track of the current position in the path
+        final int[] currentIndex = {0};
+
+        // Calculate the delay between each position update
+        final int delay = totalAnimationTime / path.size();
+
+        // Runnable to update the car's position at regular intervals
+        Runnable updateCarPosition = new Runnable() {
+            @Override
+            public void run() {
+                if (currentIndex[0] < path.size()) {
+                    LatLng nextPosition = path.get(currentIndex[0]);
+                    moveCarMarker(nextPosition);
+
+                    // Check if it's the last position in the path
+                    if (currentIndex[0] == path.size() - 1) {
+                        // Perform the additional action for the last position
+                        performAdditionalAction();
+                    }
+
+                    currentIndex[0]++;
+                    // Repeat the animation after a delay
+                    handler.postDelayed(this, delay);
+                }
+            }
+        };
+
+        // Start the animation
+        handler.post(updateCarPosition);
+    }
+
+    private void moveCarMarker(LatLng newPosition) {
+        // Find the car marker in the list
+        for (Marker marker : markers) {
+            if (marker.getTitle().equals("CarMarker")) {
+                marker.setPosition(newPosition);
+                break;
+            }
+        }
+    }
+
+    private void performAdditionalAction() {
+        Intent intent = new Intent(getActivity(), RatingActivity.class);
+        startActivity(intent);
+        Log.e("Animation", "Reached the last position. Performing additional action.");
+    }
+
+
+    private void getTimepProm(List<String> destinationNames, List<LatLng> coordinates) {
+        String ipAddress = VariablesGlobales.localip;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + ipAddress + ":8080/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        // Use the new method to get the total distance
+        Call<Double> call = apiService.getTotalDistance(destinationNames);
+        call.enqueue(new Callback<Double>() {
+            @Override
+            public void onResponse(Call<Double> call, Response<Double> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    double totalDistance = response.body();
+                    Log.d("Total Distance", "Total Distance: " + totalDistance);
+
+                    // Now you can use the total distance as needed
+                    animateCarAlongPath(coordinates, totalDistance);
+                } else {
+                    // Handle error
+                    Log.e("API Error", "Error getting total distance");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Double> call, Throwable t) {
+                // Handle failure
+                Log.e("API Error", "Failed to get total distance", t);
+            }
+        });
+    }
+
+
+
+
 
 }

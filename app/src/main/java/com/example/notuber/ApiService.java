@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Interfaz que define las operaciones de la API para la comunicación con el servidor.
@@ -95,5 +96,6 @@ public interface ApiService {
     @POST("shortestPathToCompany")
     Call<List<Node>> getShortestPathToCompany(@Body List<String> destinationNames);
 
-
+    @GET("totalDistance")
+    Call<Double> getTotalDistance(@Query("destinationNames") List<String> destinationNames);
 }
