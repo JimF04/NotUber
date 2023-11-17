@@ -346,8 +346,14 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         // Reset previous animation
         handler.removeCallbacksAndMessages(null);
 
+        // Calculate the total time for the animation (adjust speedFactor as needed)
+        int totalAnimationTime = path.size() * 5000; // 1000 milliseconds per second
+
         // Index to keep track of the current position in the path
         final int[] currentIndex = {0};
+
+        // Calculate the delay between each position update
+        final int delay = totalAnimationTime / path.size();
 
         // Runnable to update the car's position at regular intervals
         Runnable updateCarPosition = new Runnable() {
@@ -357,8 +363,8 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     LatLng nextPosition = path.get(currentIndex[0]);
                     moveCarMarker(nextPosition);
                     currentIndex[0]++;
-                    // Repeat the animation after a delay (adjust the delay as needed)
-                    handler.postDelayed(this, 1000); // 1000 milliseconds (1 second)
+                    // Repeat the animation after a delay
+                    handler.postDelayed(this, delay);
                 }
             }
         };
