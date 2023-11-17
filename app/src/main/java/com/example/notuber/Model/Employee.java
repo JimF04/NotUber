@@ -1,5 +1,9 @@
 package com.example.notuber.Model;
 
+/**
+ * La clase Employee representa a un empleado con información asociada como nombre, correo electrónico,
+ * contraseña, ubicación, calificación y un identificador de la compañía.
+ */
 public class Employee {
 
     private String companyID;

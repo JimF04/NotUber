@@ -30,11 +30,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Fragmento que representa la sección de amigos en la interfaz de usuario del empleado.
+ */
 public class FriendsFragment extends Fragment {
 
+    /**
+     * El enlace de datos para el fragmento de amigos.
+     */
     private FragmentFriendsBinding binding;
     private FriendsViewModel viewmodel;
 
+
+    /**
+     * Se llama para crear la vista del fragmento.
+     *
+     * @param inflater           El LayoutInflater utilizado para inflar la vista.
+     * @param container          El contenedor en el que se debe insertar la vista.
+     * @param savedInstanceState La instancia previamente guardada del fragmento.
+     * @return La vista del fragmento.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -125,6 +140,9 @@ public class FriendsFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Se llama cuando la vista del fragmento está a punto de ser destruida.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

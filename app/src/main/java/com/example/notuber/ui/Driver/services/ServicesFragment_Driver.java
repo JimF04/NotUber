@@ -12,10 +12,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.notuber.databinding.FragmentServicesBinding;
 
+/**
+ * Fragmento que representa la sección de servicios en la interfaz de usuario del conductor.
+ */
 public class ServicesFragment_Driver extends Fragment {
-
+    /**
+     * El enlace de datos para el fragmento de servicios.
+     */
     private FragmentServicesBinding binding;
 
+    /**
+     * Se llama para crear la vista del fragmento.
+     *
+     * @param inflater           El LayoutInflater utilizado para inflar la vista.
+     * @param container          El contenedor en el que se debe insertar la vista.
+     * @param savedInstanceState La instancia previamente guardada del fragmento.
+     * @return La vista del fragmento.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ServicesViewModel_Driver galleryViewModel =
@@ -29,6 +42,9 @@ public class ServicesFragment_Driver extends Fragment {
         return root;
     }
 
+    /**
+     * Se llama cuando la vista del fragmento está a punto de ser destruida.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

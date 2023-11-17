@@ -19,10 +19,21 @@ import com.example.notuber.R;
 import com.example.notuber.databinding.FragmentSettingsBinding;
 import com.example.notuber.ui.Driver.settings.SettingsViewModel_Driver;
 
+/**
+ * Fragmento para la configuración del usuario empleado.
+ */
 public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
 
+    /**
+     * Método llamado para crear y devolver la jerarquía de vistas asociada con el fragmento.
+     *
+     * @param inflater           El objeto LayoutInflater que se utiliza para inflar cualquier vista del fragmento.
+     * @param container          Si no es nulo, este es el grupo de vistas al que se adjuntará el fragmento.
+     * @param savedInstanceState Si no es nulo, este fragmento está siendo reconstruido a partir de un estado guardado anteriormente.
+     * @return La vista root del fragmento.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         SettingsViewModel_Driver galleryViewModel =
@@ -80,6 +91,10 @@ public class SettingsFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Método llamado cuando el fragmento ya no está en uso.
+     * Esto se llama después de onDestroy().
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
