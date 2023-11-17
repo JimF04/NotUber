@@ -52,6 +52,9 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     private Polyline journeyPolyline;
 
 
+
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MapViewModel_Driver homeViewModel =
@@ -126,18 +129,18 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     Bundle bundle = getArguments();
                     String driverLocation = bundle.getString("driverLocation", "default_value");
                     setDriverLocationMarker(driverLocation);
+
                     ArrayList lista_nodos = new ArrayList();
 
-                    LatLng origen = new LatLng(9.858343, -83.915458);
-                    LatLng destino = new LatLng(9.873238, -83.944175);
-                    LatLng otro = new LatLng(9.859572, -83.920138);
-                    LatLng otro2 = new LatLng(9.86798, -83.917383);
+                    LatLng origen = new LatLng(9.838267, -83.902797);
+                    LatLng destino = new LatLng(9.846535, -83.903945);
+                    LatLng otro = new LatLng(9.854979,  -83.90887);
 
 
                     lista_nodos.add(origen);
                     lista_nodos.add(destino);
                     lista_nodos.add(otro);
-                    lista_nodos.add(otro2);
+
                     drawLinesBetweenCoordinates(lista_nodos);
 
                 }
@@ -195,6 +198,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     }
 
 
+
+
+
+
+
     private void drawLinesBetweenCoordinates(List<LatLng> coordinates) {
         // Borra la polilínea anterior si existe
         if (journeyPolyline != null) {
@@ -209,6 +217,21 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
         // Dibuja la polilínea en el mapa
         journeyPolyline = mMap.addPolyline(polylineOptions);
+
+        // Añade un marcador con el ícono solo en la última posición
+        if (!coordinates.isEmpty()) {
+            LatLng lastPosition = coordinates.get(coordinates.size() - 1);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(lastPosition)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.hombre_icon))
+                    .anchor(0.5f, 0.5f); // Ajusta la posición del ancla del icono
+
+            mMap.addMarker(markerOptions);
+        }
     }
+
+
+
+
 
 }
