@@ -18,11 +18,13 @@ import com.example.notuber.ui.Employee.map.MapFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-public class DriverActivity extends AppCompatActivity{
+/**
+ * Actividad principal para conductores que gestiona la navegación a través de fragmentos.
+ */
+public class DriverActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityDriverBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,7 @@ public class DriverActivity extends AppCompatActivity{
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // Definir las configuraciones de la barra de aplicación
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_map_driver, R.id.nav_services_driver, R.id.nav_friends_driver, R.id.nav_settings_driver)
                 .setOpenableLayout(drawer)
@@ -73,6 +74,4 @@ public class DriverActivity extends AppCompatActivity{
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-
 }

@@ -33,10 +33,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Actividad que permite al usuario elegir una ubicación en el mapa.
+ */
 public class ChooseLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ImageButton mZoomIn, mZoomOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +66,6 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 mMap.animateCamera(CameraUpdateFactory.zoomOut());
             }
         });
-
     }
 
     @Override
@@ -79,20 +82,25 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         LatLng initialLocation = new LatLng(9.85339295368408, -83.90958197696368);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 14));
 
+        // Obtener y mostrar los nodos desde la API
         getNodesFromApi();
 
+        // Configurar el listener para el clic en marcadores
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker){
-
-                if (marker.getTitle().equals("Empresa")){
+            public boolean onMarkerClick(Marker marker) {
+                // Verificar si el marcador corresponde a la "Empresa"
+                if (marker.getTitle().equals("Empresa")) {
                     Toast.makeText(ChooseLocationActivity.this, "You can't choose this location", Toast.LENGTH_SHORT).show();
                     return true;
                 } else {
-
+                    // Obtener datos de la intención
                     Intent intent = getIntent();
                     Bundle bundle = intent.getExtras();
+
+                    // Verificar si los datos existen en el paquete
                     if (bundle != null) {
+                        // Obtener datos relevantes del paquete
                         String companyID = bundle.getString("companyID");
                         String name = bundle.getString("name");
                         String email = bundle.getString("email");
@@ -100,6 +108,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                         String nodeName = marker.getTitle();
                         String role = bundle.getString("role");
 
+                        // Procesar los datos según el rol del usuario
                         if (Objects.equals(role, "employee")) {
                             Employee employee = new Employee();
                             employee.setCompanyID(companyID);
@@ -109,17 +118,20 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                             employee.setLocation(nodeName);
                             employee.setRating(0.0);
 
+                            // Registrar empleado en el servidor
                             registerEmployeeOnServer(employee);
                         } else if (Objects.equals(role, "driver")) {
+                            // Crear un nuevo paquete con información del conductor
                             Bundle bundle2 = new Bundle();
                             bundle2.putString("driverLocation", nodeName);
+                            bundle2.putString("driverEmail", bundle.getString("email"));
 
+                            // Iniciar la actividad del conductor
                             Intent intent2 = new Intent(ChooseLocationActivity.this, DriverActivity.class);
                             intent2.putExtras(bundle2);
                             startActivity(intent2);
                             finish();
                             return true;
-
                         }
                     }
                 }
@@ -128,6 +140,9 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         });
     }
 
+    /**
+     * Obtiene los nodos de la API y agrega marcadores al mapa.
+     */
     public void getNodesFromApi() {
         String ipAddress = VariablesGlobales.localip;
 
@@ -160,6 +175,11 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         });
     }
 
+    /**
+     * Agrega marcadores al mapa según la lista de nodos proporcionada.
+     *
+     * @param nodeMarkers Lista de nodos con información de marcadores.
+     */
     private void addMarkersToMap(List<NodeMarker> nodeMarkers) {
         for (NodeMarker nodeMarker : nodeMarkers) {
             MarkerOptions markerOptions;
@@ -181,6 +201,11 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         }
     }
 
+    /**
+     * Registra un empleado en el servidor.
+     *
+     * @param employee Objeto Employee que contiene la información del empleado a registrar.
+     */
     private void registerEmployeeOnServer(Employee employee) {
         String ipAddress = VariablesGlobales.localip;
         Retrofit retrofit = new Retrofit.Builder()
@@ -189,7 +214,6 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-
 
         Call<Void> call = apiService.registerEmployee(employee);
 
@@ -220,7 +244,5 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 System.out.println(error);
             }
         });
-
     }
-
 }

@@ -5,6 +5,13 @@ plugins {
 android {
     namespace 'com.example.notuber'
     compileSdk 34
+    viewBinding {
+        enabled = true
+
+        buildFeatures {
+            viewBinding true
+        }
+    }
 
     defaultConfig {
         applicationId "com.example.notuber"
