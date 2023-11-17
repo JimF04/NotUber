@@ -76,6 +76,8 @@ public class EmployeeLoginActivity extends AppCompatActivity {
                     // Inicio de sesión exitoso, realiza las acciones necesarias.
                     Toast.makeText(EmployeeLoginActivity.this, "Employee logged in successfully", Toast.LENGTH_SHORT).show();
 
+                    VariablesGlobales.currentuser = email;
+
                     Bundle bundle = new Bundle();
                     bundle.putString("email", email);
 

@@ -1,12 +1,6 @@
 package com.example.notuber;
 
-import com.example.notuber.Model.ApiResponse;
-import com.example.notuber.Model.Employee;
-import com.example.notuber.Model.LogIn;
-import com.example.notuber.Model.Driver;
-import com.example.notuber.Model.NodeMarker;
-import com.example.notuber.Model.NodesResponse;
-
+import com.example.notuber.Model.*;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,6 +22,12 @@ public interface ApiService {
 
     @POST("employee/login")
     Call<Void> logInEmployee(@Body LogIn logIn);
+
+    @POST("addfriend")
+    Call<Void> addFriend(@Body FriendRequest friendRequest);
+
+    @POST("friends")
+    Call<String> getFriends(@Body String email);
 
     @GET("graph")
     Call<NodesResponse> getNodes();
