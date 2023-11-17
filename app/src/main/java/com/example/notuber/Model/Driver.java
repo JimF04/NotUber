@@ -1,5 +1,9 @@
 package com.example.notuber.Model;
 
+/**
+ * La clase Driver representa a un conductor con información asociada como nombre, correo electrónico,
+ * contraseña, calificación, número de viajes, ubicación, y un identificador de la compañía.
+ */
 public class Driver {
 
     private String companyID;

@@ -39,6 +39,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Fragmento que muestra un mapa con marcadores de nodos y la ubicación del empleado.
+ */
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private FragmentMapBinding binding;
@@ -47,6 +50,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private List<Marker> markers = new ArrayList<>();
 
+
+    /**
+     * Se llama para crear la vista del fragmento.
+     *
+     * @param inflater           El LayoutInflater utilizado para inflar la vista.
+     * @param container          El contenedor en el que se debe insertar la vista.
+     * @param savedInstanceState La instancia previamente guardada del fragmento.
+     * @return La vista del fragmento.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MapViewModel homeViewModel =
@@ -63,12 +75,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
+    /**
+     * Se llama cuando la vista del fragmento está a punto de ser destruida.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    /**
+     * Se llama cuando el mapa está listo para ser utilizado.
+     *
+     * @param googleMap La instancia de GoogleMap.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -85,6 +105,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         getNodesFromApi();
     }
+
+    /**
+     * Obtiene los nodos desde la API y muestra marcadores en el mapa.
+     */
     private void getNodesFromApi() {
         String ipAddress = VariablesGlobales.localip;
 
@@ -126,6 +150,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+
     private void addMarkersToMap(List<NodeMarker> nodeMarkers) {
         for (NodeMarker nodeMarker : nodeMarkers) {
             MarkerOptions markerOptions;
@@ -148,6 +173,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * Obtiene la ubicación del empleado desde la API y actualiza el color del marcador en el mapa.
+     *
+     * @param email El correo electrónico del empleado.
+     */
     private void getEmployeeLocation(String email) {
         Log.d("Node", "getEmployeeLocation called with email: " + email);
 
@@ -190,6 +220,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    /**
+     * Busca un marcador por el nombre de ubicación y actualiza su color.
+     *
+     * @param locationName El nombre de la ubicación del marcador.
+     * @return El marcador encontrado o nulo si no se encuentra.
+     */
     private Marker findMarkerByLocationName(String locationName) {
         for (Marker marker : markers) {
             if (locationName.equals(marker.getTitle())) {

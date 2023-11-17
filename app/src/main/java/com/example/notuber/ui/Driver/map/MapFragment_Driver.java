@@ -38,6 +38,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Fragmento que representa la sección del mapa en la interfaz de usuario del conductor.
+ */
 public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
     private FragmentMapBinding binding;
@@ -54,7 +57,14 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
 
 
-
+    /**
+     * Se llama para crear la vista del fragmento.
+     *
+     * @param inflater           El LayoutInflater utilizado para inflar la vista.
+     * @param container          El contenedor en el que se debe insertar la vista.
+     * @param savedInstanceState La instancia previamente guardada del fragmento.
+     * @return La vista del fragmento.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MapViewModel_Driver homeViewModel =
@@ -80,12 +90,20 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         return root;
     }
 
+    /**
+     * Se llama cuando la vista del fragmento está a punto de ser destruida.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
+    /**
+     * Se llama cuando el mapa está listo para ser utilizado.
+     *
+     * @param googleMap El objeto GoogleMap que representa el mapa.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -104,6 +122,10 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
     }
 
+    /**
+     * Realiza una solicitud a la API para obtener información sobre los nodos y realiza
+     * acciones en consecuencia, como agregar marcadores y dibujar rutas en el mapa.
+     */
     private void getNodesFromApi() {
         String ipAddress = VariablesGlobales.localip;
 
@@ -154,6 +176,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    /**
+     * Agrega marcadores al mapa en función de la información proporcionada por la API.
+     *
+     * @param nodeMarkers Lista de marcadores de nodos obtenidos de la API.
+     */
     private void addMarkersToMap(List<NodeMarker> nodeMarkers) {
         for (NodeMarker nodeMarker : nodeMarkers) {
             MarkerOptions markerOptions;
@@ -176,6 +203,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * Establece un marcador que representa la ubicación actual del conductor en el mapa.
+     *
+     * @param driverLocation La ubicación actual del conductor.
+     */
     private void setDriverLocationMarker(String driverLocation) {
         for (Marker marker : markers) {
             if (driverLocation.equals(marker.getTitle())) {
@@ -199,10 +231,12 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
 
 
-
-
-
-
+    /**
+     * Dibuja una polilínea entre las coordenadas especificadas en el mapa y agrega marcadores
+     * en las posiciones correspondientes.
+     *
+     * @param coordinates Lista de coordenadas para dibujar la polilínea.
+     */
     private void drawLinesBetweenCoordinates(List<LatLng> coordinates) {
         // Borra la polilínea anterior si existe
         if (journeyPolyline != null) {
