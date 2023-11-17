@@ -325,8 +325,13 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     // Draw the lines between the coordinates
                     drawLinesBetweenCoordinates(coordinates);
 
-                    // Animate the car along the path
-                    animateCarAlongPath(coordinates);
+                    List<String> coordinates2 = new ArrayList<>();
+                    for (Node node : shortestPath) {
+                        coordinates2.add(node.getName());
+                    }
+
+                    // Pass the coordinates and total distance to animateCarAlongPath
+                    getTimepProm(coordinates2, coordinates);
 
                 } else {
                     // Handle error
@@ -342,13 +347,18 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void animateCarAlongPath(List<LatLng> path) {
+
+    private void animateCarAlongPath(List<LatLng> path, double totalDistance) {
         // Reset previous animation
         handler.removeCallbacksAndMessages(null);
 
-        // Calculate the total time for the animation (adjust speedFactor as needed)
-        int totalAnimationTime = path.size() * 5000; // 1000 milliseconds per second
+        int DistanciaInt = (int) Math.round(totalDistance);
 
+        Log.e("Time", String.valueOf(DistanciaInt));
+        // Calculate the total time for the animation (adjust speedFactor as needed)
+        int totalAnimationTime = (DistanciaInt*10000)/ path.size(); // 1000 milliseconds per second
+
+        Log.e("Time", String.valueOf(totalAnimationTime));
         // Index to keep track of the current position in the path
         final int[] currentIndex = {0};
 
@@ -383,6 +393,43 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
+    private void getTimepProm(List<String> destinationNames, List<LatLng> coordinates) {
+        String ipAddress = VariablesGlobales.localip;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://" + ipAddress + ":8080/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        // Use the new method to get the total distance
+        Call<Double> call = apiService.getTotalDistance(destinationNames);
+        call.enqueue(new Callback<Double>() {
+            @Override
+            public void onResponse(Call<Double> call, Response<Double> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    double totalDistance = response.body();
+                    Log.d("Total Distance", "Total Distance: " + totalDistance);
+
+                    // Now you can use the total distance as needed
+                    animateCarAlongPath(coordinates, totalDistance);
+                } else {
+                    // Handle error
+                    Log.e("API Error", "Error getting total distance");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Double> call, Throwable t) {
+                // Handle failure
+                Log.e("API Error", "Failed to get total distance", t);
+            }
+        });
+    }
+
+
+
 
 
 }
