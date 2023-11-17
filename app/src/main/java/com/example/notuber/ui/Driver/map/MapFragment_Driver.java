@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +125,7 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     Bundle bundle = getArguments();
                     String driverLocation = bundle.getString("driverLocation", "default_value");
                     setDriverLocationMarker(driverLocation);
+                    
 
                 }
             }
@@ -178,4 +180,22 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
+
+
+    private void drawLinesToLastMarker(List<LatLng> markerPositions) {
+        if (journeyPath.size() > 0 && markerPositions.size() > 0) {
+            // Obtener la posición del conductor (última posición en journeyPath)
+            LatLng driverPosition = journeyPath.get(journeyPath.size() - 1);
+
+            // Dibujar líneas desde la posición del conductor hasta los marcadores especificados
+            for (LatLng markerPosition : markerPositions) {
+                Polyline polyline = mMap.addPolyline(new PolylineOptions()
+                        .add(driverPosition, markerPosition)
+                        .width(5)
+                        .color(getResources().getColor(android.R.color.holo_red_dark))); // Color rojo oscuro de Android
+            }
+        }
+    }
 }
+
