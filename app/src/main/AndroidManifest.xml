@@ -34,7 +34,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDSIts_kEQ0xFLyBYoFCHDqn4QGVAPRGZs" />
-
+        <activity android:name=".RatingActivity"
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />

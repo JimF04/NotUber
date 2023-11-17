@@ -86,6 +86,12 @@ public interface ApiService {
     @GET("employee/location/{email}")
     Call<ApiResponse> getEmployeeLocation(@Path("email") String email);
 
+    @POST("employee/rating")
+    Call<ApiResponse> getRating(@Body String rating);
+
+    @POST("employee/addrating")
+    Call<ApiResponse> addRating(@Body Integer rating);
+
     @POST("shortestPathToCompany")
     Call<List<Node>> getShortestPathToCompany(@Body List<String> destinationNames);
 
