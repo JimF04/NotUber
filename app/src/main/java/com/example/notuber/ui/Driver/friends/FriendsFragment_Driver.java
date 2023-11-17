@@ -14,23 +14,23 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.notuber.databinding.FragmentFriendsBinding;
+import com.example.notuber.databinding.FragmentFriendsDriverBinding;
 import java.util.List;
 
 public class FriendsFragment_Driver extends Fragment {
 
-    private FragmentFriendsBinding binding;
+    private FragmentFriendsDriverBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         FriendsViewModel_Driver slideshowViewModel =
                 new ViewModelProvider(this).get(FriendsViewModel_Driver.class);
 
-        binding = FragmentFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentFriendsDriverBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         TextInputEditText correoamigo = binding.correoamigo;
-        Button buttonAddFriend = binding.Button;
+        Button buttonAddFriend = binding.button;
         LinearLayout linearLayout = binding.linearLayout;
 
         buttonAddFriend.setOnClickListener(v -> {
