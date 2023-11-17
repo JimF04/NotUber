@@ -1,6 +1,7 @@
 package com.example.notuber.ui.Driver.map;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,11 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
 
     private Button mStart;
     private Polyline journeyPolyline;
+
+    private Handler handler = new Handler();
+
+    private Marker carMarker;
+
 
 
 
@@ -218,22 +224,33 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
      * @param driverLocation La ubicación actual del conductor.
      */
     private void setDriverLocationMarker(String driverLocation) {
-        for (Marker marker : markers) {
-            if (driverLocation.equals(marker.getTitle())) {
-                // Crear un nuevo marcador en la misma posición
-                MarkerOptions newMarkerOptions = new MarkerOptions()
-                        .position(marker.getPosition())
-                        .title(marker.getTitle())
-                        .zIndex(1.0f)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon));
+        if (carMarker != null) {
+            // Update the position of the existing car marker
+            for (Marker marker : markers) {
+                if ("CarMarker".equals(marker.getTitle())) {
+                    marker.setPosition(marker.getPosition());
+                    break;
+                }
+            }
+        } else {
+            // Create a new car marker if it doesn't exist
+            for (Marker marker : markers) {
+                if (driverLocation.equals(marker.getTitle())) {
+                    // Create a new car marker in the same position
+                    MarkerOptions newMarkerOptions = new MarkerOptions()
+                            .position(marker.getPosition())
+                            .title("CarMarker")
+                            .zIndex(1.0f)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon));
 
-                // Agregar el nuevo marcador al mapa
-                Marker newMarker = mMap.addMarker(newMarkerOptions);
+                    // Add the new car marker to the map
+                    carMarker = mMap.addMarker(newMarkerOptions);
 
-                // Añadir el nuevo marcador a la lista de marcadores
-                markers.add(newMarker);
+                    // Add the new car marker to the list of markers
+                    markers.add(carMarker);
 
-                break; // Termina el bucle después de encontrar el marcador original
+                    break; // End the loop after finding the original marker
+                }
             }
         }
     }
@@ -264,8 +281,9 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
         // Añade un marcador con el ícono solo en la última posición
         if (!coordinates.isEmpty()) {
             LatLng lastPosition = coordinates.get(coordinates.size() - 1);
+            LatLng position = new LatLng(9.858343, -83.915458);
             MarkerOptions markerOptions = new MarkerOptions()
-                    .position(lastPosition)
+                    .position(position)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.hombre_icon))
                     .anchor(0.5f, 0.5f); // Ajusta la posición del ancla del icono
 
@@ -307,6 +325,9 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     // Draw the lines between the coordinates
                     drawLinesBetweenCoordinates(coordinates);
 
+                    // Animate the car along the path
+                    animateCarAlongPath(coordinates);
+
                 } else {
                     // Handle error
                     Log.e("API Error", "Error getting shortest path");
@@ -320,5 +341,42 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
+    private void animateCarAlongPath(List<LatLng> path) {
+        // Reset previous animation
+        handler.removeCallbacksAndMessages(null);
+
+        // Index to keep track of the current position in the path
+        final int[] currentIndex = {0};
+
+        // Runnable to update the car's position at regular intervals
+        Runnable updateCarPosition = new Runnable() {
+            @Override
+            public void run() {
+                if (currentIndex[0] < path.size()) {
+                    LatLng nextPosition = path.get(currentIndex[0]);
+                    moveCarMarker(nextPosition);
+                    currentIndex[0]++;
+                    // Repeat the animation after a delay (adjust the delay as needed)
+                    handler.postDelayed(this, 1000); // 1000 milliseconds (1 second)
+                }
+            }
+        };
+
+        // Start the animation
+        handler.post(updateCarPosition);
+    }
+
+    private void moveCarMarker(LatLng newPosition) {
+        // Find the car marker in the list
+        for (Marker marker : markers) {
+            if (marker.getTitle().equals("CarMarker")) {
+                marker.setPosition(newPosition);
+
+                break;
+            }
+        }
+    }
+
 
 }
