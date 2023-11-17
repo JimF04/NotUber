@@ -37,7 +37,7 @@ public class RatingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Método para autenticar al conductor
-                addrating();
+//                addrating();
             }
         });
 
@@ -62,17 +62,16 @@ public class RatingActivity extends Activity {
             ApiService apiService = retrofit.create(ApiService.class);
 
             Call<ApiResponse> call = apiService.addRating(ratingValue);
-            call.enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        // Adici�n de amigo exitosa
-                        Toast.makeText(getActivity(), "Friend added", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Request failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+//            call.enqueue(new Callback<Void>() {
+//                @Override
+//                public void onResponse(Call<Void> call, Response<Void> response) {
+//                    if (response.isSuccessful()) {
+//                        // Adici�n de amigo exitosa
+//                        Toast.makeText(RatingActivity.this, "Friend added", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(RatingActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
         }
     }
-}
