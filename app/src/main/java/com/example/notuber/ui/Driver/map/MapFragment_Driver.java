@@ -49,6 +49,7 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     private List<LatLng> journeyPath = new ArrayList<>();
 
     private Button mStart;
+    private Polyline journeyPolyline;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -125,7 +126,19 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
                     Bundle bundle = getArguments();
                     String driverLocation = bundle.getString("driverLocation", "default_value");
                     setDriverLocationMarker(driverLocation);
-                    
+                    ArrayList lista_nodos = new ArrayList();
+
+                    LatLng origen = new LatLng(9.858343, -83.915458);
+                    LatLng destino = new LatLng(9.873238, -83.944175);
+                    LatLng otro = new LatLng(9.859572, -83.920138);
+                    LatLng otro2 = new LatLng(9.86798, -83.917383);
+
+
+                    lista_nodos.add(origen);
+                    lista_nodos.add(destino);
+                    lista_nodos.add(otro);
+                    lista_nodos.add(otro2);
+                    drawLinesBetweenCoordinates(lista_nodos);
 
                 }
             }
@@ -182,20 +195,20 @@ public class MapFragment_Driver extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-    private void drawLinesToLastMarker(List<LatLng> markerPositions) {
-        if (journeyPath.size() > 0 && markerPositions.size() > 0) {
-            // Obtener la posición del conductor (última posición en journeyPath)
-            LatLng driverPosition = journeyPath.get(journeyPath.size() - 1);
-
-            // Dibujar líneas desde la posición del conductor hasta los marcadores especificados
-            for (LatLng markerPosition : markerPositions) {
-                Polyline polyline = mMap.addPolyline(new PolylineOptions()
-                        .add(driverPosition, markerPosition)
-                        .width(5)
-                        .color(getResources().getColor(android.R.color.holo_red_dark))); // Color rojo oscuro de Android
-            }
+    private void drawLinesBetweenCoordinates(List<LatLng> coordinates) {
+        // Borra la polilínea anterior si existe
+        if (journeyPolyline != null) {
+            journeyPolyline.remove();
         }
-    }
-}
 
+        // Configura las opciones de la polilínea
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .addAll(coordinates)
+                .width(5)  // Ancho de la línea en píxeles
+                .color(getResources().getColor(android.R.color.holo_red_dark)); // Color rojo oscuro de Android
+
+        // Dibuja la polilínea en el mapa
+        journeyPolyline = mMap.addPolyline(polylineOptions);
+    }
+
+}
